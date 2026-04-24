@@ -1,0 +1,161 @@
+<!-- okodi_agri/templates/accounts/profile.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile | Okodi Agri-Business{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1><i class="fas fa-user-circle"></i> My Profile</h1>
+    
+    <div class="profile-content">
+        <div class="profile-info">
+            <h2>Account Information</h2>
+            <div class="info-card">
+                <div class="info-row">
+                    <strong>Username:</strong>
+                    <span>{{ user.username }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Email:</strong>
+                    <span>{{ user.email|default:"Not provided" }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Full Name:</strong>
+                    <span>{{ user.get_full_name|default:"Not provided" }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Member Since:</strong>
+                    <span>{{ user.date_joined|date:"F j, Y" }}</span>
+                </div>
+                <div class="info-row">
+                    <strong>Last Login:</strong>
+                    <span>{{ user.last_login|date:"F j, Y, g:i a" }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-actions">
+            <h2>Quick Actions</h2>
+            <div class="action-buttons">
+                <a href="{% url 'orders:order_list' %}" class="action-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>My Orders</span>
+                </a>
+                <a href="/cart/" class="action-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>My Cart</span>
+                </a>
+                <a href="/shop/" class="action-btn">
+                    <i class="fas fa-store"></i>
+                    <span>Continue Shopping</span>
+                </a>
+                <a href="{% url 'accounts:logout' %}" class="action-btn logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+    }
+    
+    .profile-container h1 {
+        margin-bottom: 2rem;
+        color: #333;
+    }
+    
+    .profile-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+    
+    .profile-info h2, .profile-actions h2 {
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        color: #555;
+    }
+    
+    .info-card {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 1.5rem;
+    }
+    
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    
+    .info-row strong {
+        color: #555;
+    }
+    
+    .info-row span {
+        color: #333;
+    }
+    
+    .action-buttons {
+        display: grid;
+        gap: 1rem;
+    }
+    
+    .action-btn {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background: #f9f9f9;
+        color: #333;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .action-btn i {
+        font-size: 1.2rem;
+        color: #4caf50;
+        width: 30px;
+    }
+    
+    .action-btn:hover {
+        background: #4caf50;
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .action-btn:hover i {
+        color: white;
+    }
+    
+    .action-btn.logout:hover {
+        background: #f44336;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .info-row {
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+    }
+</style>
+{% endblock %}

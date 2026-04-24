@@ -1,0 +1,204 @@
+<!-- okodi_agri/templates/accounts/register.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register | Okodi Agri-Business{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="fas fa-seedling"></i>
+            <h2>Create Account</h2>
+            <p>Join Okodi Agri-Business today</p>
+        </div>
+        
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                Please correct the errors below.
+            </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="id_username">
+                    <i class="fas fa-user"></i> Username
+                </label>
+                <input type="text" name="username" id="id_username" required>
+                {% if form.username.errors %}
+                <small class="error-text">{{ form.username.errors.0 }}</small>
+                {% endif %}
+                <small class="help-text">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password1">
+                    <i class="fas fa-lock"></i> Password
+                </label>
+                <input type="password" name="password1" id="id_password1" required>
+                {% if form.password1.errors %}
+                <small class="error-text">{{ form.password1.errors.0 }}</small>
+                {% endif %}
+                <small class="help-text">Your password must contain at least 8 characters.</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password2">
+                    <i class="fas fa-lock"></i> Confirm Password
+                </label>
+                <input type="password" name="password2" id="id_password2" required>
+                {% if form.password2.errors %}
+                <small class="error-text">{{ form.password2.errors.0 }}</small>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn-register-submit">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .auth-container {
+        min-height: calc(100vh - 300px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
+    
+    .auth-card {
+        max-width: 500px;
+        width: 100%;
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-header i {
+        font-size: 3rem;
+        color: #4caf50;
+        margin-bottom: 1rem;
+    }
+    
+    .auth-header h2 {
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .auth-header p {
+        color: #666;
+    }
+    
+    .auth-form .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .auth-form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: 500;
+    }
+    
+    .auth-form label i {
+        margin-right: 0.5rem;
+        color: #4caf50;
+    }
+    
+    .auth-form input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+    
+    .auth-form input:focus {
+        outline: none;
+        border-color: #4caf50;
+    }
+    
+    .help-text {
+        display: block;
+        margin-top: 0.3rem;
+        font-size: 0.8rem;
+        color: #888;
+    }
+    
+    .error-text {
+        display: block;
+        margin-top: 0.3rem;
+        font-size: 0.8rem;
+        color: #f44336;
+    }
+    
+    .btn-register-submit {
+        width: 100%;
+        padding: 1rem;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .btn-register-submit:hover {
+        background: #2e7d32;
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .auth-footer p {
+        margin: 0.5rem 0;
+        color: #666;
+    }
+    
+    .auth-footer a {
+        color: #4caf50;
+        text-decoration: none;
+    }
+    
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+    
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+{% endblock %}

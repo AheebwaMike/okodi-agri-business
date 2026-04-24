@@ -1,0 +1,570 @@
+<!-- okodi_agri/templates/shop/product_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | Okodi Agri-Business{% endblock %}
+
+{% block content %}
+<div class="product-detail-container">
+    <div class="product-gallery">
+        {% if product.main_image %}
+            <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="main-product-image" id="mainImage">
+        {% else %}
+            <div class="main-product-image-placeholder">
+                <i class="fas fa-seedling"></i>
+            </div>
+        {% endif %}
+        
+        <div class="thumbnail-gallery">
+            {% if product.main_image %}
+                <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeImage(this.src)">
+            {% endif %}
+            {% if product.additional_image_1 %}
+                <img src="{{ product.additional_image_1.url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeImage(this.src)">
+            {% endif %}
+            {% if product.additional_image_2 %}
+                <img src="{{ product.additional_image_2.url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeImage(this.src)">
+            {% endif %}
+            {% if product.additional_image_3 %}
+                <img src="{{ product.additional_image_3.url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeImage(this.src)">
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="product-info-detail">
+        <div class="product-breadcrumb">
+            <a href="/">Home</a> > 
+            <a href="/shop/">{{ product.category.name }}</a> > 
+            <span>{{ product.name }}</span>
+        </div>
+        
+        <h1>{{ product.name }}</h1>
+        
+        <div class="product-meta">
+            <span class="product-type-badge">
+                <i class="fas fa-tag"></i> {{ product.get_product_type_display }}
+            </span>
+            <span class="product-sku">
+                <i class="fas fa-barcode"></i> SKU: #{{ product.id }}
+            </span>
+        </div>
+        
+        <div class="product-price-section">
+            <div class="current-price">UGX {{ product.price|floatformat:0 }}</div>
+        </div>
+        
+        <div class="product-specs">
+            <h3>Product Specifications</h3>
+            <table class="specs-table">
+                <tr>
+                    <td><i class="fas fa-weight-hanging"></i> Weight:</td>
+                    <td><strong>{{ product.weight|default:"N/A" }} kg</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-ruler"></i> Measurement:</td>
+                    <td><strong>{{ product.measurement|default:"Standard" }}</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-truck"></i> Supplier:</td>
+                    <td><strong>{{ product.supplier_name|default:"Okodi Farms" }}</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-map-marker-alt"></i> Source:</td>
+                    <td><strong>{{ product.supplier_location|default:"Uganda" }}</strong></td>
+                </tr>
+                <tr>
+                    <td><i class="fas fa-boxes"></i> Stock Status:</td>
+                    <td>
+                        {% if product.stock_quantity > 0 %}
+                            <span class="in-stock-badge">
+                                <i class="fas fa-check-circle"></i> In Stock ({{ product.stock_quantity }} available)
+                            </span>
+                        {% else %}
+                            <span class="out-of-stock-badge">
+                                <i class="fas fa-times-circle"></i> Out of Stock
+                            </span>
+                        {% endif %}
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="product-description">
+            <h3>Product Description</h3>
+            <p>{{ product.description }}</p>
+        </div>
+        
+        {% if product.stock_quantity > 0 %}
+        <div class="purchase-section">
+            <div class="quantity-selector">
+                <label for="quantity">Quantity:</label>
+                <button type="button" class="qty-btn" onclick="changeQuantity(-1)">-</button>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ product.stock_quantity }}">
+                <button type="button" class="qty-btn" onclick="changeQuantity(1)">+</button>
+            </div>
+            
+            <button class="btn-add-to-cart-detail" onclick="addToCart({{ product.id }})">
+                <i class="fas fa-shopping-cart"></i> Add to Cart
+            </button>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if related_products %}
+<div class="related-products-section">
+    <h2 class="related-title">You Might Also Like</h2>
+    <div class="related-products-grid">
+        {% for related in related_products %}
+        <div class="related-product-card">
+            <a href="{{ related.get_absolute_url }}" class="related-product-link">
+                <div class="related-product-image">
+                    {% if related.main_image %}
+                        <img src="{{ related.main_image.url }}" alt="{{ related.name }}">
+                    {% else %}
+                        <div class="related-image-placeholder">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="related-product-info">
+                    <h3 class="related-product-name">{{ related.name }}</h3>
+                    <p class="related-product-price">UGX {{ related.price|floatformat:0 }}</p>
+                    <button class="related-add-to-cart" onclick="event.preventDefault(); addToCartFromRelated({{ related.id }})">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .product-detail-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 3rem;
+    }
+    
+    .product-gallery {
+        position: sticky;
+        top: 100px;
+    }
+    
+    .main-product-image {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+    
+    .main-product-image-placeholder {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        color: #4caf50;
+        border-radius: 12px;
+    }
+    
+    .thumbnail-gallery {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .thumbnail {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s;
+    }
+    
+    .thumbnail:hover {
+        border-color: #4caf50;
+    }
+    
+    .product-breadcrumb {
+        margin-bottom: 1rem;
+        color: #888;
+        font-size: 0.9rem;
+    }
+    
+    .product-breadcrumb a {
+        color: #4caf50;
+        text-decoration: none;
+    }
+    
+    .product-info-detail h1 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    
+    .product-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .product-type-badge, .product-sku {
+        padding: 0.3rem 0.8rem;
+        background: #f0f0f0;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+    
+    .current-price {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #2e7d32;
+        margin-bottom: 1.5rem;
+    }
+    
+    .product-specs h3, .product-description h3 {
+        margin-bottom: 1rem;
+        color: #333;
+    }
+    
+    .specs-table {
+        width: 100%;
+        margin-bottom: 1.5rem;
+    }
+    
+    .specs-table td {
+        padding: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .specs-table td:first-child {
+        width: 140px;
+        color: #666;
+    }
+    
+    .in-stock-badge {
+        color: #4caf50;
+    }
+    
+    .out-of-stock-badge {
+        color: #f44336;
+    }
+    
+    .purchase-section {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f0f0f0;
+    }
+    
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .quantity-selector label {
+        font-weight: 500;
+    }
+    
+    .qty-btn {
+        width: 36px;
+        height: 36px;
+        background: #f0f0f0;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .qty-btn:hover {
+        background: #ddd;
+    }
+    
+    #quantity {
+        width: 60px;
+        height: 36px;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+    }
+    
+    .btn-add-to-cart-detail {
+        width: 100%;
+        padding: 1rem;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    
+    .btn-add-to-cart-detail:hover {
+        background: #2e7d32;
+    }
+    
+    /* Related Products Section */
+    .related-products-section {
+        margin-top: 3rem;
+        padding: 2rem;
+        background: white;
+        border-radius: 16px;
+    }
+    
+    .related-title {
+        font-size: 1.8rem;
+        color: #333;
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+    }
+    
+    .related-title:after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 3px;
+        background: #4caf50;
+        margin: 0.5rem auto 0;
+        border-radius: 2px;
+    }
+    
+    .related-products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+    
+    .related-product-card {
+        background: #f9f9f9;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .related-product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .related-product-link {
+        text-decoration: none;
+        display: block;
+    }
+    
+    .related-product-image {
+        width: 100%;
+        height: 200px;
+        overflow: hidden;
+        background: #f0f0f0;
+    }
+    
+    .related-product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s;
+    }
+    
+    .related-product-card:hover .related-product-image img {
+        transform: scale(1.05);
+    }
+    
+    .related-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: #4caf50;
+        font-size: 3rem;
+    }
+    
+    .related-product-info {
+        padding: 1rem;
+        text-align: center;
+    }
+    
+    .related-product-name {
+        font-size: 1rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        height: 2.5rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    
+    .related-product-price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #2e7d32;
+        margin-bottom: 1rem;
+    }
+    
+    .related-add-to-cart {
+        width: 100%;
+        padding: 0.6rem;
+        background: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background 0.3s;
+    }
+    
+    .related-add-to-cart:hover {
+        background: #2e7d32;
+    }
+    
+    @media (max-width: 768px) {
+        .product-detail-container {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 1rem;
+        }
+        
+        .product-gallery {
+            position: static;
+        }
+        
+        .main-product-image, .main-product-image-placeholder {
+            height: 300px;
+        }
+        
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+        }
+        
+        .related-products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        
+        .related-title {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+
+<script>
+    function changeImage(src) {
+        const mainImage = document.getElementById('mainImage');
+        if (mainImage) {
+            mainImage.src = src;
+        }
+    }
+    
+    function changeQuantity(delta) {
+        const quantityInput = document.getElementById('quantity');
+        let newValue = parseInt(quantityInput.value) + delta;
+        const max = parseInt(quantityInput.getAttribute('max'));
+        
+        if (newValue < 1) newValue = 1;
+        if (max && newValue > max) newValue = max;
+        
+        quantityInput.value = newValue;
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    function addToCart(productId) {
+        const quantity = document.getElementById('quantity')?.value || 1;
+        
+        fetch(`/cart/add/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ quantity: parseInt(quantity) })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                cartCountElements.forEach(el => {
+                    el.textContent = data.cart_count;
+                });
+                alert(`${data.item_quantity} x product(s) added to cart!`);
+            } else if (data.error) {
+                alert(data.error);
+            } else {
+                alert('Please login to add items to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding product to cart');
+        });
+    }
+    
+    function addToCartFromRelated(productId) {
+        event.stopPropagation();
+        
+        fetch(`/cart/add/${productId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ quantity: 1 })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const cartCountElements = document.querySelectorAll('.cart-count');
+                cartCountElements.forEach(el => {
+                    el.textContent = data.cart_count;
+                });
+                alert('Product added to cart!');
+            } else if (data.error) {
+                alert(data.error);
+            } else {
+                alert('Please login to add items to cart');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error adding product to cart');
+        });
+        
+        return false;
+    }
+</script>
+{% endblock %}

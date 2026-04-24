@@ -1,0 +1,327 @@
+<!-- okodi_agri/templates/orders/order_detail.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Order #{{ order.order_number }} | Okodi Agri-Business{% endblock %}
+
+{% block content %}
+<div class="order-detail-container">
+    <div class="order-header">
+        <h1>Order #{{ order.order_number }}</h1>
+        <div class="order-status status-{{ order.status }}">
+            <i class="fas fa-circle"></i> {{ order.get_status_display }}
+        </div>
+    </div>
+    
+    <div class="order-content">
+        <div class="order-info">
+            <div class="info-section">
+                <h3><i class="fas fa-calendar-alt"></i> Order Date</h3>
+                <p>{{ order.created_at|date:"F j, Y, g:i a" }}</p>
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-user"></i> Customer Information</h3>
+                <p><strong>Name:</strong> {{ order.full_name }}</p>
+                <p><strong>Email:</strong> {{ order.email }}</p>
+                <p><strong>Phone:</strong> {{ order.phone }}</p>
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-map-marker-alt"></i> Shipping Address</h3>
+                <p>{{ order.address }}</p>
+                <p>{{ order.city }}, {{ order.district }}</p>
+                {% if order.zip_code %}
+                <p>Zip Code: {{ order.zip_code }}</p>
+                {% endif %}
+                {% if order.delivery_notes %}
+                <p><strong>Delivery Notes:</strong> {{ order.delivery_notes }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="info-section">
+                <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                <p>{{ order.get_payment_method_display }}</p>
+            </div>
+        </div>
+        
+        <div class="order-items">
+            <h3><i class="fas fa-box"></i> Order Items</h3>
+            
+            <div class="items-table">
+                <div class="items-header">
+                    <div>Product</div>
+                    <div>Price</div>
+                    <div>Quantity</div>
+                    <div>Total</div>
+                </div>
+                
+                {% for item in order_items %}
+                <div class="order-item">
+                    <div class="item-product">
+                        {% if item.product.main_image %}
+                            <img src="{{ item.product.main_image.url }}" alt="{{ item.product.name }}" class="item-image">
+                        {% else %}
+                            <div class="item-image-placeholder">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                        {% endif %}
+                        <div class="item-details">
+                            <strong>{{ item.product.name }}</strong>
+                            <small>{{ item.product.category.name }}</small>
+                        </div>
+                    </div>
+                    <div class="item-price">UGX {{ item.price|floatformat:0 }}</div>
+                    <div class="item-quantity">{{ item.quantity }}</div>
+                    <div class="item-total">UGX {{ item.get_total_price|floatformat:0 }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="order-totals">
+                <div class="total-row">
+                    <span>Subtotal:</span>
+                    <span>UGX {{ order.subtotal|floatformat:0 }}</span>
+                </div>
+                <div class="total-row">
+                    <span>Delivery Fee:</span>
+                    <span>UGX {{ order.delivery_fee|floatformat:0 }}</span>
+                </div>
+                <div class="total-row grand-total">
+                    <span>Total:</span>
+                    <span>UGX {{ order.total_amount|floatformat:0 }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="order-actions">
+        <a href="/shop/" class="btn-continue">
+            <i class="fas fa-store"></i> Continue Shopping
+        </a>
+        <a href="/orders/list/" class="btn-orders">
+            <i class="fas fa-list"></i> My Orders
+        </a>
+    </div>
+</div>
+
+<style>
+    .order-detail-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 16px;
+        padding: 2rem;
+    }
+    
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .order-header h1 {
+        font-size: 1.5rem;
+        color: #333;
+        margin: 0;
+    }
+    
+    .order-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+    
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-processing {
+        background: #cce5ff;
+        color: #004085;
+    }
+    
+    .status-shipped {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .status-delivered {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-cancelled {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .order-content {
+        display: grid;
+        grid-template-columns: 1fr 1.5fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .info-section {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+    }
+    
+    .info-section h3 {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+        color: #555;
+    }
+    
+    .info-section p {
+        margin: 0.3rem 0;
+        color: #666;
+    }
+    
+    .items-table {
+        background: #f9f9f9;
+        border-radius: 8px;
+        padding: 1rem;
+    }
+    
+    .items-header {
+        display: grid;
+        grid-template-columns: 3fr 1fr 1fr 1fr;
+        padding: 0.8rem;
+        font-weight: bold;
+        border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .order-item {
+        display: grid;
+        grid-template-columns: 3fr 1fr 1fr 1fr;
+        align-items: center;
+        padding: 1rem 0.8rem;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .item-product {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .item-image {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    
+    .item-image-placeholder {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        color: #4caf50;
+    }
+    
+    .item-details {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .item-details small {
+        color: #888;
+        font-size: 0.8rem;
+    }
+    
+    .order-totals {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f9f9f9;
+        border-radius: 8px;
+        text-align: right;
+    }
+    
+    .total-row {
+        padding: 0.5rem 0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 2rem;
+    }
+    
+    .grand-total {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #2e7d32;
+        border-top: 1px solid #e0e0e0;
+        margin-top: 0.5rem;
+        padding-top: 1rem;
+    }
+    
+    .order-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        padding-top: 2rem;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .btn-continue, .btn-orders {
+        padding: 0.8rem 1.5rem;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+    
+    .btn-continue {
+        background: #4caf50;
+        color: white;
+    }
+    
+    .btn-continue:hover {
+        background: #2e7d32;
+    }
+    
+    .btn-orders {
+        background: #f0f0f0;
+        color: #333;
+    }
+    
+    .btn-orders:hover {
+        background: #e0e0e0;
+    }
+    
+    @media (max-width: 768px) {
+        .order-content {
+            grid-template-columns: 1fr;
+        }
+        
+        .items-header {
+            display: none;
+        }
+        
+        .order-item {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .item-product {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .order-header {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
