@@ -37,13 +37,11 @@
             max-width: 1400px;
             margin: 0 auto;
             padding: 1rem 2rem;
-        }
-        
-        .nav-top {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
+            justify-content: space-between;
+            gap: 1.5rem;
+            flex-wrap: wrap;
         }
         
         .logo {
@@ -57,6 +55,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            white-space: nowrap;
         }
         
         .menu-toggle {
@@ -72,7 +71,6 @@
         .search-bar {
             flex: 1;
             max-width: 400px;
-            margin: 0.5rem 0;
         }
         
         .search-bar input {
@@ -165,21 +163,32 @@
             font-weight: bold;
         }
         
-        /* Mobile nav */
+        /* Mobile styles */
         @media (max-width: 768px) {
             .nav-container {
                 padding: 0.8rem 1rem;
+                flex-wrap: wrap;
             }
+            
+            .logo {
+                order: 1;
+            }
+            
             .menu-toggle {
                 display: block;
+                order: 2;
             }
+            
             .search-bar {
+                order: 3;
                 width: 100%;
                 max-width: none;
-                margin: 0.8rem 0 0;
+                margin-top: 0.8rem;
             }
+            
             .nav-links {
                 display: none;
+                order: 4;
                 width: 100%;
                 flex-direction: column;
                 gap: 0.8rem;
@@ -187,17 +196,25 @@
                 border-top: 1px solid #eee;
                 margin-top: 0.8rem;
             }
+            
             .nav-links.active {
                 display: flex;
             }
-            .nav-links a, .nav-links form {
+            
+            .nav-links a, 
+            .nav-links form {
                 text-align: center;
                 width: 100%;
             }
+            
+            .nav-links .cart-icon {
+                display: none; /* Hide desktop cart icon on mobile, use floating */
+            }
         }
         
-        /* Floating cart */
+        /* Floating cart (mobile only) */
         .floating-cart {
+            display: none;
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -392,12 +409,10 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-top">
-                <a href="/" class="logo">
-                    <i class="fas fa-seedling"></i> Okodi Agri
-                </a>
-                <button class="menu-toggle" aria-label="Menu">☰</button>
-            </div>
+            <a href="/" class="logo">
+                <i class="fas fa-seedling"></i> Okodi Agri
+            </a>
+            <button class="menu-toggle" aria-label="Menu">☰</button>
             <div class="search-bar">
                 <input type="text" placeholder="Search agro products..." id="searchInput">
             </div>
@@ -422,7 +437,7 @@
         </div>
     </nav>
     
-    <!-- Floating Cart -->
+    <!-- Floating Cart Button (mobile only) -->
     <div class="floating-cart" id="floatingCart">
         <a href="/cart/">
             <i class="fas fa-shopping-cart"></i>
@@ -475,7 +490,7 @@
     </footer>
     
     <script>
-        // Hamburger menu
+        // Hamburger menu toggle
         const menuToggle = document.querySelector('.menu-toggle');
         const navLinks = document.querySelector('.nav-links');
         if (menuToggle) {
@@ -484,14 +499,14 @@
             });
         }
         
-        // Search
+        // Search functionality
         document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 window.location.href = `/shop/?search=${encodeURIComponent(this.value)}`;
             }
         });
         
-        // Scroll to top
+        // Scroll to top button
         const scrollBtn = document.getElementById('scrollToTopBtn');
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
