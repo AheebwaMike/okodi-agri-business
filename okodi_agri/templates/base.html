@@ -13,570 +13,429 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    
-    body {
-        font-family: 'Inter', sans-serif;
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        min-height: 100vh;
-    }
-    
-    /* Navigation Bar */
-    .navbar {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-    
-    .nav-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 1rem 2rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-    }
-    
-    .logo {
-        font-size: 1.5rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #2e7d32, #4caf50);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-    
-    .menu-toggle {
-        display: none;
-        background: none;
-        border: none;
-        font-size: 1.8rem;
-        cursor: pointer;
-        color: #2e7d32;
-    }
-    
-    .nav-links {
-        display: flex;
-        gap: 1.5rem;
-        align-items: center;
-    }
-    
-    .search-bar {
-        flex: 1;
-        max-width: 400px;
-        margin: 0 1rem;
-    }
-    
-    .search-bar input {
-        width: 100%;
-        padding: 0.7rem 1.2rem;
-        border: 2px solid #e0e0e0;
-        border-radius: 50px;
-        font-size: 0.9rem;
-        transition: all 0.3s;
-    }
-    
-    /* Mobile Styles */
-    @media (max-width: 768px) {
-        .nav-container {
-            padding: 0.8rem 1rem;
-            position: relative;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        .menu-toggle {
-            display: block;
-            order: 2;
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
         }
         
         .logo {
-            order: 1;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #2e7d32;
+            padding: 0.5rem;
         }
         
         .search-bar {
-            order: 3;
+            flex: 1;
+            max-width: 400px;
+            margin: 0.5rem 0;
+        }
+        
+        .search-bar input {
             width: 100%;
-            margin: 0.8rem 0 0;
-            max-width: 100%;
+            padding: 0.7rem 1.2rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
         
         .nav-links {
-            display: none;
-            width: 100%;
-            flex-direction: column;
-            gap: 0.8rem;
-            padding: 1rem 0;
-            border-top: 1px solid #eee;
-            margin-top: 0.8rem;
-        }
-        
-        .nav-links.active {
             display: flex;
+            gap: 1.5rem;
+            align-items: center;
         }
         
-        .nav-links a, .nav-links form {
-            width: 100%;
-            text-align: center;
-            padding: 0.6rem;
+        /* Navigation link styles */
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
         }
         
-        .btn-login, .btn-register {
+        .nav-links a:hover {
+            color: #4caf50;
+        }
+        
+        .nav-links .btn-login,
+        .nav-links .btn-register {
             display: inline-block;
-            width: 100%;
-            text-align: center;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .nav-links .btn-login {
+            background: transparent;
+            border: 2px solid #4caf50;
+            color: #4caf50;
+        }
+        
+        .nav-links .btn-login:hover {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .nav-links .btn-register {
+            background: #4caf50;
+            color: white;
+            border: none;
+        }
+        
+        .nav-links .btn-register:hover {
+            background: #2e7d32;
+        }
+        
+        /* Logout button styling */
+        .nav-links form button {
+            background: transparent;
+            border: 2px solid #4caf50;
+            color: #4caf50;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            font-size: inherit;
+        }
+        
+        .nav-links form button:hover {
+            background: #4caf50;
+            color: white;
         }
         
         .cart-icon {
             position: relative;
-            display: inline-block;
         }
-    }
-    
-    /* Rest of your existing styles remain... */
-    .cart-count {
-        position: absolute;
-        top: -8px;
-        right: -12px;
-        background: #ff5722;
-        color: white;
-        border-radius: 50%;
-        padding: 2px 6px;
-        font-size: 0.7rem;
-        font-weight: bold;
-    }
-    
-    /* Buttons */
-    .btn-login, .btn-register {
-        padding: 0.5rem 1.2rem;
-        border-radius: 50px;
-        transition: all 0.3s;
-        text-decoration: none;
-        display: inline-block;
-    }
-    
-    .btn-login {
-        background: transparent;
-        border: 2px solid #4caf50;
-        color: #4caf50;
-    }
-    
-    .btn-login:hover {
-        background: #4caf50;
-        color: white;
-    }
-    
-    .btn-register {
-        background: #4caf50;
-        color: white;
-    }
-    
-    /* Main Content */
-    .main-content {
-        max-width: 1400px;
-        margin: 1rem auto;
-        padding: 0 1rem;
-        min-height: calc(100vh - 200px);
-    }
-    
-    /* Footer */
-    .footer {
-        background: #1a1a1a;
-        color: white;
-        padding: 2rem 1rem 1rem;
-        margin-top: 2rem;
-    }
-    
-    .footer-content {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1.5rem;
-    }
-    
-    .footer-section h3 {
-        font-size: 1rem;
-        margin-bottom: 0.8rem;
-    }
-    
-    .footer-section p, .footer-section a {
-        font-size: 0.85rem;
-    }
-    
-    .copyright {
-        font-size: 0.75rem;
-    }
-    
-    /* Responsive adjustments for tablets */
-    @media (max-width: 1024px) {
-        .main-content {
-            padding: 0 1rem;
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: #ff5722;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
         }
-    }
-    
-    @media (max-width: 640px) {
-        .footer-content {
-            grid-template-columns: 1fr;
+        
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0.8rem 1rem;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: none;
+                margin: 0.8rem 0 0;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 0.8rem;
+                padding: 1rem 0;
+                border-top: 1px solid #eee;
+                margin-top: 0.8rem;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links a, 
+            .nav-links form {
+                text-align: center;
+                width: 100%;
+            }
+            
+            .btn-login, 
+            .btn-register,
+            .nav-links form button {
+                width: 100%;
+                text-align: center;
+            }
+            
+            /* Hide the cart icon in nav on mobile (use floating cart instead) */
+            .nav-links .cart-icon {
+                display: none;
+            }
+        }
+        
+        /* Floating cart - visible only on mobile */
+        .floating-cart {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .floating-cart a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            background: #4caf50;
+            color: white;
+            border-radius: 50%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            text-decoration: none;
+            font-size: 1.5rem;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .floating-cart a:hover {
+            transform: scale(1.05);
+            background: #2e7d32;
+        }
+        
+        .floating-cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff5722;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            min-width: 18px;
             text-align: center;
         }
-    }
-
-    /* Navigation link styles */
-.nav-links a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s;
-    position: relative;
-}
-
-.nav-links a:hover {
-    color: #4caf50;
-}
-
-.nav-links .btn-login,
-.nav-links .btn-register {
-    display: inline-block;
-    padding: 0.5rem 1.2rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.nav-links .btn-login {
-    background: transparent;
-    border: 2px solid #4caf50;
-    color: #4caf50;
-}
-
-.nav-links .btn-login:hover {
-    background: #4caf50;
-    color: white;
-}
-
-.nav-links .btn-register {
-    background: #4caf50;
-    color: white;
-    border: none;
-}
-
-.nav-links .btn-register:hover {
-    background: #2e7d32;
-}
-
-/* Logout button styling */
-.nav-links form button {
-    background: transparent;
-    border: 2px solid #4caf50;
-    color: #4caf50;
-    padding: 0.5rem 1.2rem;
-    border-radius: 50px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-family: inherit;
-    font-size: inherit;
-}
-
-.nav-links form button:hover {
-    background: #4caf50;
-    color: white;
-}
-
-/* Cart icon special handling */
-.cart-icon a {
-    color: #333;
-}
-
-.cart-icon a:hover {
-    color: #4caf50;
-}
-
-/* Base nav styles */
-.nav-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-}
-
-.nav-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-}
-
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: #2e7d32;
-    padding: 0.5rem;
-}
-
-.search-bar {
-    flex: 1;
-    max-width: 400px;
-    margin: 0.5rem 0;
-}
-
-/* Mobile styles */
-@media (max-width: 768px) {
-    .nav-container {
-        padding: 0.8rem 1rem;
-    }
-    
-    .menu-toggle {
-        display: block;
-    }
-    
-    .search-bar {
-        width: 100%;
-        max-width: none;
-        margin: 0.8rem 0 0;
-    }
-    
-    .nav-links {
-        display: none;
-        width: 100%;
-        flex-direction: column;
-        gap: 0.8rem;
-        padding: 1rem 0;
-        border-top: 1px solid #eee;
-        margin-top: 0.8rem;
-    }
-    
-    .nav-links.active {
-        display: flex;
-    }
-    
-    .nav-links a, 
-    .nav-links form {
-        text-align: center;
-        width: 100%;
-    }
-    
-    .btn-login, 
-    .btn-register,
-    .nav-links form button {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-
-/* Footer Styles */
-.footer {
-    background: #1a1a1a;
-    color: white;
-    padding: 3rem 2rem 1rem;
-    margin-top: 4rem;
-}
-
-.footer-content {
-    max-width: 1400px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-}
-
-.footer-section h3 {
-    margin-bottom: 1rem;
-    color: #4caf50;
-    font-size: 1.2rem;
-}
-
-.footer-section p, 
-.footer-section a {
-    color: #ccc;
-    text-decoration: none;
-    line-height: 1.8;
-    font-size: 0.95rem;
-}
-
-.footer-section a:hover {
-    color: #4caf50;
-    text-decoration: underline;
-}
-
-.footer-section i {
-    margin-right: 8px;
-    color: #4caf50;
-}
-
-.copyright {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #333;
-    color: #888;
-    font-size: 0.85rem;
-}
-
-/* Mobile footer adjustments */
-@media (max-width: 768px) {
-    .footer {
-        padding: 2rem 1rem 1rem;
-        margin-top: 2rem;
-    }
-    
-    .footer-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-        gap: 1.5rem;
-    }
-    
-    .footer-section h3 {
-        font-size: 1.1rem;
-    }
-    
-    .footer-section p, 
-    .footer-section a {
-        font-size: 0.85rem;
-    }
-}
-
-/* Main Content */
-.main-content {
-    max-width: 1400px;
-    margin: 2rem auto;
-    padding: 0 2rem;
-    min-height: calc(100vh - 200px);
-}
-
-/* Mobile - reduce padding to zero */
-@media (max-width: 768px) {
-    .main-content {
-        margin: 1rem auto;
-        padding: 0 1rem;    /* was 2rem, now 1rem to reduce left/right spacing */
-    }
-}
-
-@media (max-width: 480px) {
-    .main-content {
-        padding: 0 0.5rem;  /* even smaller on very narrow screens */
-    }
-}
-
-
-
-/* Floating cart - hidden on desktop, visible on mobile */
-.floating-cart {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.floating-cart a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    background: #4caf50;
-    color: white;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    text-decoration: none;
-    font-size: 1.5rem;
-    position: relative;
-    transition: transform 0.2s;
-}
-
-.floating-cart a:hover {
-    transform: scale(1.05);
-    background: #2e7d32;
-}
-
-.floating-cart-count {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #ff5722;
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 0.7rem;
-    font-weight: bold;
-    min-width: 18px;
-    text-align: center;
-}
-
-/* Show on mobile only */
-@media (max-width: 768px) {
-    .floating-cart {
-        display: block;
-    }
-    
-    /* Optionally hide the cart link in nav-links on mobile to avoid duplication */
-    .nav-links .cart-icon {
-        display: none;
-    }
-}
-
-
-
-.scroll-to-top {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    z-index: 1000;
-    width: 50px;
-    height: 50px;
-    background: #2e7d32;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.2rem;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    transition: background 0.3s;
-}
-
-.scroll-to-top:hover {
-    background: #1b5e20;
-}
-
-@media (max-width: 768px) {
-    .scroll-to-top {
-        bottom: 80px; /* Above floating cart if needed */
-    }
-}
-</style>
+        
+        @media (max-width: 768px) {
+            .floating-cart {
+                display: block;
+            }
+        }
+        
+        /* Scroll to top button */
+        .scroll-to-top {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            background: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: background 0.3s;
+        }
+        
+        .scroll-to-top:hover {
+            background: #1b5e20;
+        }
+        
+        @media (max-width: 768px) {
+            .scroll-to-top {
+                bottom: 80px;
+            }
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            min-height: calc(100vh - 200px);
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0 0.5rem;
+            }
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: #4caf50;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p, 
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+        
+        .footer-section a:hover {
+            color: #4caf50;
+            text-decoration: underline;
+        }
+        
+        .footer-section i {
+            margin-right: 8px;
+            color: #4caf50;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #333;
+            color: #888;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            .footer {
+                padding: 2rem 1rem 1rem;
+                margin-top: 2rem;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 1.5rem;
+            }
+        }
+        
+        /* Fix for Add to Cart buttons (prevents overflow) */
+        .btn-add-to-cart,
+        .related-add-to-cart,
+        .btn-add-to-cart-detail {
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        /* Ensure product cards don't overflow */
+        .product-card,
+        .related-product-card {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .product-info {
+            padding: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        /* Messages */
+        .messages {
+            max-width: 1400px;
+            margin: 1rem auto;
+            padding: 0 2rem;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
     
     {% block extra_css %}{% endblock %}
 </head>
-
-<!-- Floating Cart Button for Mobile -->
-<div class="floating-cart" id="floatingCart">
-    <a href="/cart/">
-        <i class="fas fa-shopping-cart"></i>
-        <span class="floating-cart-count">{{ cart_count|default:0 }}</span>
-    </a>
-</div>
-
-<button id="scrollToTopBtn" class="scroll-to-top" title="Go to top">
-    <i class="fas fa-arrow-up"></i>
-</button>
-
 <body>
     <nav class="navbar">
         <div class="nav-container">
@@ -611,6 +470,18 @@
             </div>
         </div>
     </nav>
+    
+    <!-- Floating Cart Button (mobile only) -->
+    <div class="floating-cart" id="floatingCart">
+        <a href="/cart/">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="floating-cart-count">{{ cart_count|default:0 }}</span>
+        </a>
+    </div>
+    
+    <button id="scrollToTopBtn" class="scroll-to-top" title="Go to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
     
     {% if messages %}
     <div class="messages">
@@ -653,19 +524,9 @@
     </footer>
     
     <script>
-        // Simple search functionality
-        document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                window.location.href = `/shop/?search=${encodeURIComponent(this.value)}`;
-            }
-        });
-    </script>
-
-    <script>
         // Hamburger menu toggle
         const menuToggle = document.querySelector('.menu-toggle');
         const navLinks = document.querySelector('.nav-links');
-        
         if (menuToggle) {
             menuToggle.addEventListener('click', () => {
                 navLinks.classList.toggle('active');
@@ -678,19 +539,19 @@
                 window.location.href = `/shop/?search=${encodeURIComponent(this.value)}`;
             }
         });
-
+        
         // Scroll to top button
-const scrollBtn = document.getElementById('scrollToTopBtn');
-window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-        scrollBtn.style.display = 'block';
-    } else {
-        scrollBtn.style.display = 'none';
-    }
-});
-scrollBtn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+        const scrollBtn = document.getElementById('scrollToTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollBtn.style.display = 'block';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        });
+        scrollBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     </script>
     
     {% block extra_js %}{% endblock %}
