@@ -450,6 +450,28 @@
         font-size: 0.85rem;
     }
 }
+
+/* Main Content */
+.main-content {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    min-height: calc(100vh - 200px);
+}
+
+/* Mobile - reduce padding to zero */
+@media (max-width: 768px) {
+    .main-content {
+        margin: 1rem auto;
+        padding: 0 1rem;    /* was 2rem, now 1rem to reduce left/right spacing */
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 0 0.5rem;  /* even smaller on very narrow screens */
+    }
+}
 </style>
     
     {% block extra_css %}{% endblock %}
