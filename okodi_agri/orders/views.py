@@ -150,3 +150,55 @@ def process_payment(request, order_id):
         return redirect('orders:order_detail', order_id=order.id)
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+from django.contrib.admin.views.decorators import staff_member_required
+from django.db.models import Sum, Count
+from django.utils import timezone
+from datetime import timedelta
+
+@staff_member_required
+def admin_dashboard(request):
+    """Custom admin dashboard showing total revenue and order stats"""
+    # Total revenue from all orders (completed, processing, shipped, delivered)
+    total_revenue = Order.objects.filter(
+        status__in=['pending', 'processing', 'shipped', 'delivered']
+    ).aggregate(total=Sum('total_amount'))['total'] or 0
+    
+    # Total number of orders
+    total_orders = Order.objects.count()
+    
+    # Orders by status
+    pending_orders = Order.objects.filter(status='pending').count()
+    processing_orders = Order.objects.filter(status='processing').count()
+    shipped_orders = Order.objects.filter(status='shipped').count()
+    delivered_orders = Order.objects.filter(status='delivered').count()
+    cancelled_orders = Order.objects.filter(status='cancelled').count()
+    
+    # Recent orders (last 7 days)
+    last_week = timezone.now() - timedelta(days=7)
+    recent_orders = Order.objects.filter(created_at__gte=last_week).count()
+    recent_revenue = Order.objects.filter(
+        created_at__gte=last_week,
+        status__in=['pending', 'processing', 'shipped', 'delivered']
+    ).aggregate(total=Sum('total_amount'))['total'] or 0
+    
+    # Top products by quantity sold
+    from django.db.models import Sum as SumModel
+    top_products = OrderItem.objects.values('product__name', 'product__id').annotate(
+        total_quantity=SumModel('quantity')
+    ).order_by('-total_quantity')[:5]
+    
+    context = {
+        'total_revenue': total_revenue,
+        'total_orders': total_orders,
+        'pending_orders': pending_orders,
+        'processing_orders': processing_orders,
+        'shipped_orders': shipped_orders,
+        'delivered_orders': delivered_orders,
+        'cancelled_orders': cancelled_orders,
+        'recent_orders': recent_orders,
+        'recent_revenue': recent_revenue,
+        'top_products': top_products,
+    }
+    return render(request, 'admin/admin_dashboard.html', context)

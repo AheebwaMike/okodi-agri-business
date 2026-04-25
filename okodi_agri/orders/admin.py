@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.utils.html import format_html
+from django.urls import reverse
 from .models import Order, OrderItem
 
 class OrderItemInline(admin.TabularInline):
@@ -14,10 +15,11 @@ class OrderItemInline(admin.TabularInline):
         return f"UGX {obj.get_total_price():,.0f}"
     total_price.short_description = 'Total'
 
+@admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_number', 'full_name', 'status', 'payment_method', 'total_amount', 'created_at']
+    list_display = ['order_number', 'user_link', 'full_name', 'status', 'payment_method', 'total_amount', 'created_at']
     list_filter = ['status', 'payment_method', 'created_at']
-    search_fields = ['order_number', 'full_name', 'email', 'phone']
+    search_fields = ['order_number', 'full_name', 'email', 'phone', 'user__username']
     readonly_fields = ['order_number', 'created_at', 'updated_at', 'subtotal', 'total_amount']
     inlines = [OrderItemInline]
     
@@ -26,7 +28,7 @@ class OrderAdmin(admin.ModelAdmin):
             'fields': ('order_number', 'status', 'payment_method')
         }),
         ('Customer Information', {
-            'fields': ('full_name', 'email', 'phone')
+            'fields': ('user_link_display', 'full_name', 'email', 'phone')
         }),
         ('Shipping Address', {
             'fields': ('address', 'city', 'district', 'zip_code', 'delivery_notes')
@@ -39,6 +41,20 @@ class OrderAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
+    def user_link(self, obj):
+        if obj.user:
+            url = reverse('admin:auth_user_change', args=[obj.user.pk])
+            return format_html('<a href="{}">{}</a>', url, obj.user.username)
+        return "Guest"
+    user_link.short_description = 'User'
+    
+    def user_link_display(self, obj):
+        if obj.user:
+            url = reverse('admin:auth_user_change', args=[obj.user.pk])
+            return format_html('User: <a href="{}"><strong>{}</strong></a>', url, obj.user.username)
+        return "Guest user"
+    user_link_display.short_description = 'User Account'
     
     actions = ['mark_as_processing', 'mark_as_shipped', 'mark_as_delivered', 'mark_as_cancelled']
     
@@ -70,15 +86,23 @@ class OrderAdmin(admin.ModelAdmin):
         self.message_user(request, f'{updated} orders cancelled and stock restored.')
     mark_as_cancelled.short_description = 'Cancel Orders'
 
+@admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['order', 'product', 'quantity', 'price', 'total_price']
+    list_display = ['order_link', 'product_link', 'quantity', 'price', 'total_price']
     list_filter = ['order__status']
     search_fields = ['order__order_number', 'product__name']
     readonly_fields = ['total_price']
     
+    def order_link(self, obj):
+        url = reverse('admin:orders_order_change', args=[obj.order.pk])
+        return format_html('<a href="{}">{}</a>', url, obj.order.order_number)
+    order_link.short_description = 'Order'
+    
+    def product_link(self, obj):
+        url = reverse('admin:shop_product_change', args=[obj.product.pk])
+        return format_html('<a href="{}">{}</a>', url, obj.product.name)
+    product_link.short_description = 'Product'
+    
     def total_price(self, obj):
         return f"UGX {obj.get_total_price():,.0f}"
     total_price.short_description = 'Total'
-
-admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderItem, OrderItemAdmin)

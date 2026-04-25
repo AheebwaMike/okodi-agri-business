@@ -346,6 +346,39 @@
             justify-content: center;
         }
     }
+
+    @media (max-width: 768px) {
+    .cart-container {
+        padding: 1rem;
+    }
+    
+    .cart-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .cart-header {
+        display: none;
+    }
+    
+    .cart-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        text-align: center;
+        padding: 1rem;
+    }
+    
+    .cart-item-product {
+        flex-direction: column;
+    }
+    
+    .cart-item-quantity {
+        justify-content: center;
+    }
+    
+    .cart-summary {
+        position: static;
+    }
+}
 </style>
 
 <script>

@@ -6,8 +6,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
-DEBUG = False
-ALLOWED_HOSTS = ['agrishop.pythonanywhere.com']
+DEBUG = True
+ALLOWED_HOSTS = []
 
 # Installed apps
 INSTALLED_APPS = [

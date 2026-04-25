@@ -1,0 +1,82 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Okodi Agri Admin{% endblock %}
+
+{% block content %}
+<div style="padding: 20px;">
+    <h1>📊 Admin Dashboard</h1>
+    <p style="margin-bottom: 30px;">Welcome to the Okodi Agri-Business admin dashboard. Here's an overview of your store's performance.</p>
+    
+    <!-- Stats Cards -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px;">
+        <div style="background: #e8f5e9; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin: 0 0 10px; color: #2e7d32;">Total Revenue</h3>
+            <p style="font-size: 2rem; font-weight: bold; margin: 0; color: #1b5e20;">UGX {{ total_revenue|floatformat:0 }}</p>
+        </div>
+        <div style="background: #e3f2fd; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin: 0 0 10px; color: #1565c0;">Total Orders</h3>
+            <p style="font-size: 2rem; font-weight: bold; margin: 0;">{{ total_orders }}</p>
+        </div>
+        <div style="background: #fff3e0; padding: 20px; border-radius: 12px; text-align: center;">
+            <h3 style="margin: 0 0 10px; color: #e65100;">Last 7 Days</h3>
+            <p style="font-size: 1rem; margin: 0;">Orders: {{ recent_orders }}</p>
+            <p style="font-size: 1.2rem; font-weight: bold; margin-top: 5px;">UGX {{ recent_revenue|floatformat:0 }}</p>
+        </div>
+    </div>
+    
+    <!-- Order Status Breakdown -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 40px;">
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+            <strong>Pending</strong>
+            <p style="font-size: 1.5rem; margin: 5px 0 0; color: #ff9800;">{{ pending_orders }}</p>
+        </div>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+            <strong>Processing</strong>
+            <p style="font-size: 1.5rem; margin: 5px 0 0; color: #2196f3;">{{ processing_orders }}</p>
+        </div>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+            <strong>Shipped</strong>
+            <p style="font-size: 1.5rem; margin: 5px 0 0; color: #9c27b0;">{{ shipped_orders }}</p>
+        </div>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+            <strong>Delivered</strong>
+            <p style="font-size: 1.5rem; margin: 5px 0 0; color: #4caf50;">{{ delivered_orders }}</p>
+        </div>
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; text-align: center;">
+            <strong>Cancelled</strong>
+            <p style="font-size: 1.5rem; margin: 5px 0 0; color: #f44336;">{{ cancelled_orders }}</p>
+        </div>
+    </div>
+    
+    <!-- Top Products -->
+    {% if top_products %}
+    <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h2>🏆 Top Selling Products</h2>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr><th style="text-align: left; padding: 10px; border-bottom: 2px solid #eee;">Product</th>
+                    <th style="text-align: left; padding: 10px; border-bottom: 2px solid #eee;">Quantity Sold</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in top_products %}
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">
+                        <a href="{% url 'admin:shop_product_change' product.product__id %}">
+                            {{ product.product__name }}
+                        </a>
+                    </td>
+                    <td style="padding: 8px; border-bottom: 1px solid #eee;">{{ product.total_quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+    
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="{% url 'admin:index' %}" style="background: #4caf50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 8px;">← Back to Admin</a>
+    </div>
+</div>
+{% endblock %}

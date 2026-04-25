@@ -323,5 +323,38 @@
             text-align: center;
         }
     }
+
+    @media (max-width: 768px) {
+    .order-detail-container {
+        padding: 1rem;
+    }
+    
+    .order-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .order-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .items-header {
+        display: none;
+    }
+    
+    .order-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .item-product {
+        flex-direction: column;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+    }
+}
 </style>
 {% endblock %}

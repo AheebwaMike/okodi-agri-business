@@ -586,6 +586,49 @@
         cursor: not-allowed;
     }
 
+    /* Mobile adjustments for product grid */
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+    }
+    
+    .product-info h3 {
+        font-size: 0.9rem;
+    }
+    
+    .product-price {
+        font-size: 1rem;
+    }
+    
+    .btn-add-to-cart {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .shop-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .shop-sidebar {
+        position: static;
+        margin-bottom: 1rem;
+    }
+    
+    .filter-section {
+        padding: 1rem;
+    }
+    
+    .sort-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .sort-select {
+        width: 100%;
+    }
+}
+
 
 </style>
 

@@ -377,5 +377,25 @@
             padding: 1rem;
         }
     }
+
+    @media (max-width: 768px) {
+    .checkout-container {
+        padding: 1rem;
+    }
+    
+    .checkout-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .payment-option {
+        flex-direction: column;
+        text-align: center;
+    }
+}
 </style>
 {% endblock %}
