@@ -20,37 +20,27 @@
                 All Agro Products
             {% endif %}
         </h1>
-        <p>{% if products %}{{ products.paginator.count }}{% else %}0{% endif %} products found</p>
+        <p>{{ products.paginator.count|default:0 }} products found</p>
     </div>
-    
+
     <div class="shop-layout">
         <!-- Sidebar Filters -->
         <aside class="shop-sidebar">
             <div class="filter-section">
                 <h3><i class="fas fa-filter"></i> Filters</h3>
-                
-                <!-- Categories -->
+
                 <div class="filter-group">
                     <h4>Categories</h4>
                     <ul class="category-list">
-                        <li>
-                            <a href="{% url 'shop:product_list' %}" class="{% if not category %}active{% endif %}">
-                                All Products
-                            </a>
-                        </li>
+                        <li><a href="{% url 'shop:product_list' %}" class="{% if not category %}active{% endif %}">All Products</a></li>
                         {% for cat in categories %}
-                        <li>
-                            <a href="{% url 'shop:product_list_by_category' cat.slug %}" 
-                               class="{% if category and category.id == cat.id %}active{% endif %}">
-                                {{ cat.name }}
-                                <span class="count">({{ cat.product_count }})</span>
-                            </a>
-                        </li>
+                        <li><a href="{% url 'shop:product_list_by_category' cat.slug %}" class="{% if category and category.id == cat.id %}active{% endif %}">
+                            {{ cat.name }} <span class="count">({{ cat.product_count }})</span>
+                        </a></li>
                         {% endfor %}
                     </ul>
                 </div>
-                
-                <!-- Product Type -->
+
                 <div class="filter-group">
                     <h4>Product Type</h4>
                     <select id="productTypeFilter" class="filter-select">
@@ -62,8 +52,7 @@
                         <option value="fresh_produce" {% if current_type == 'fresh_produce' %}selected{% endif %}>Fresh Produce</option>
                     </select>
                 </div>
-                
-                <!-- Price Range -->
+
                 <div class="filter-group">
                     <h4>Price Range (UGX)</h4>
                     <div class="price-inputs">
@@ -75,14 +64,11 @@
                 </div>
             </div>
         </aside>
-        
+
         <!-- Main Content -->
         <div class="shop-main">
-            <!-- Sort Bar -->
             <div class="sort-bar">
-                <div class="sort-label">
-                    <i class="fas fa-sort-amount-down"></i> Sort by:
-                </div>
+                <span class="sort-label"><i class="fas fa-sort-amount-down"></i> Sort by:</span>
                 <select id="sortSelect" class="sort-select">
                     <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest First</option>
                     <option value="oldest" {% if current_sort == 'oldest' %}selected{% endif %}>Oldest First</option>
@@ -92,48 +78,35 @@
                     <option value="name_desc" {% if current_sort == 'name_desc' %}selected{% endif %}>Name: Z to A</option>
                 </select>
             </div>
-            
-            <!-- Products Grid -->
+
             <div class="products-grid">
                 {% if products %}
                     {% for product in products %}
                     <div class="product-card">
                         <div class="product-badge">
-                            {% if product.stock_quantity < 10 %}
-                                <span class="badge low-stock">Low Stock</span>
-                            {% endif %}
-                            {% if product.product_type %}
-                                <span class="badge type-badge">{{ product.get_product_type_display }}</span>
-                            {% endif %}
+                            {% if product.stock_quantity < 10 %}<span class="badge low-stock">Low Stock</span>{% endif %}
+                            <span class="badge type-badge">{{ product.get_product_type_display }}</span>
                         </div>
                         <a href="{{ product.get_absolute_url }}" class="product-link-wrapper">
                             <div class="product-image-container">
                                 {% if product.main_image %}
                                     <img src="{{ product.main_image.url }}" alt="{{ product.name }}" class="product-image">
                                 {% else %}
-                                    <div class="product-image-placeholder">
-                                        <i class="fas fa-seedling"></i>
-                                    </div>
+                                    <div class="product-image-placeholder"><i class="fas fa-seedling"></i></div>
                                 {% endif %}
                             </div>
                             <div class="product-info">
                                 <h3>{{ product.name }}</h3>
-                                <p class="product-category">
-                                    <i class="fas fa-tag"></i> {{ product.category.name }}
-                                </p>
+                                <p class="product-category"><i class="fas fa-tag"></i> {{ product.category.name }}</p>
                                 <p class="product-price">UGX {{ product.price|floatformat:0 }}</p>
                                 {% if product.stock_quantity > 0 %}
-                                    <p class="product-stock in-stock">
-                                        <i class="fas fa-check-circle"></i> In Stock ({{ product.stock_quantity }})
-                                    </p>
+                                    <p class="product-stock in-stock"><i class="fas fa-check-circle"></i> In Stock ({{ product.stock_quantity }})</p>
                                 {% else %}
-                                    <p class="product-stock out-of-stock">
-                                        <i class="fas fa-times-circle"></i> Out of Stock
-                                    </p>
+                                    <p class="product-stock out-of-stock"><i class="fas fa-times-circle"></i> Out of Stock</p>
                                 {% endif %}
                             </div>
                         </a>
-                        <button class="btn-add-to-cart" data-product-id="{{ product.id }}" 
+                        <button class="btn-add-to-cart" data-product-id="{{ product.id }}"
                                 onclick="addToCartFromList({{ product.id }})"
                                 {% if product.stock_quantity == 0 %}disabled{% endif %}>
                             <i class="fas fa-shopping-cart"></i> Add to Cart
@@ -145,25 +118,18 @@
                         <i class="fas fa-box-open"></i>
                         <h3>No products found</h3>
                         <p>Try adjusting your filters or search criteria.</p>
-                        <a href="{% url 'shop:product_list' %}" class="btn-reset-filters">
-                            <i class="fas fa-sync-alt"></i> Reset Filters
-                        </a>
+                        <a href="{% url 'shop:product_list' %}" class="btn-reset-filters"><i class="fas fa-sync-alt"></i> Reset Filters</a>
                     </div>
                 {% endif %}
             </div>
-            
-            <!-- Pagination -->
+
             {% if products.has_other_pages %}
             <div class="pagination">
                 {% if products.has_previous %}
                     <a href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">&laquo; First</a>
                     <a href="?page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">Previous</a>
                 {% endif %}
-                
-                <span class="current-page">
-                    Page {{ products.number }} of {{ products.paginator.num_pages }}
-                </span>
-                
+                <span class="current-page">Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
                 {% if products.has_next %}
                     <a href="?page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">Next</a>
                     <a href="?page={{ products.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">Last &raquo;</a>
@@ -180,68 +146,55 @@
         margin: 0 auto;
         padding: 0;
     }
-    
     .shop-header {
         margin-bottom: 2rem;
         text-align: center;
     }
-    
     .shop-header h1 {
         font-size: 2rem;
         color: #2e7d32;
         margin-bottom: 0.5rem;
     }
-    
     .shop-header p {
         color: #666;
     }
-    
     .shop-layout {
         display: grid;
         grid-template-columns: 280px 1fr;
         gap: 2rem;
     }
-    
-    /* Sidebar Styles */
     .shop-sidebar {
         position: sticky;
         top: 100px;
         height: fit-content;
     }
-    
     .filter-section {
         background: white;
         border-radius: 12px;
         padding: 1.5rem;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    
     .filter-section h3 {
         margin-bottom: 1.5rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #4caf50;
         color: #333;
     }
-    
     .filter-group {
         margin-bottom: 1.5rem;
     }
-    
     .filter-group h4 {
         margin-bottom: 0.8rem;
         color: #555;
         font-size: 0.95rem;
     }
-    
     .category-list {
         list-style: none;
         padding: 0;
     }
-    
     .category-list li {
         margin-bottom: 0.5rem;
     }
-    
     .category-list a {
         color: #666;
         text-decoration: none;
@@ -250,16 +203,10 @@
         padding: 0.3rem 0;
         transition: color 0.3s;
     }
-    
-    .category-list a:hover, .category-list a.active {
+    .category-list a:hover,
+    .category-list a.active {
         color: #4caf50;
     }
-    
-    .count {
-        color: #999;
-        font-size: 0.8rem;
-    }
-    
     .filter-select {
         width: 100%;
         padding: 0.6rem;
@@ -268,21 +215,18 @@
         font-size: 0.9rem;
         box-sizing: border-box;
     }
-    
     .price-inputs {
         display: flex;
         gap: 0.5rem;
         align-items: center;
         margin-bottom: 0.8rem;
     }
-    
     .price-inputs input {
         flex: 1;
         padding: 0.5rem;
         border: 1px solid #ddd;
         border-radius: 8px;
     }
-    
     .filter-btn {
         width: 100%;
         padding: 0.6rem;
@@ -295,12 +239,9 @@
         font-size: 0.9rem;
         box-sizing: border-box;
     }
-    
     .filter-btn:hover {
         background: #2e7d32;
     }
-    
-    /* Sort Bar */
     .sort-bar {
         background: white;
         padding: 1rem;
@@ -312,35 +253,30 @@
         gap: 1rem;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    
     .sort-select {
         padding: 0.5rem;
         border: 1px solid #ddd;
         border-radius: 8px;
         cursor: pointer;
     }
-    
-    /* Products Grid */
     .products-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 1.5rem;
     }
-    
     .product-card {
         background: white;
         border-radius: 12px;
         overflow: hidden;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         transition: transform 0.3s, box-shadow 0.3s;
-        position: relative;
+        display: flex;
+        flex-direction: column;
     }
-    
     .product-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 5px 20px rgba(0,0,0,0.15);
     }
-    
     .product-badge {
         position: absolute;
         top: 10px;
@@ -349,41 +285,31 @@
         display: flex;
         gap: 0.5rem;
     }
-    
     .badge {
         padding: 0.3rem 0.6rem;
         border-radius: 4px;
         font-size: 0.7rem;
         font-weight: bold;
-    }
-    
-    .low-stock {
-        background: #ff9800;
-        color: white;
-    }
-    
-    .type-badge {
         background: #2196f3;
         color: white;
     }
-    
+    .low-stock {
+        background: #ff9800;
+    }
     .product-image-container {
         width: 100%;
         height: 250px;
         overflow: hidden;
     }
-    
     .product-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s;
     }
-    
     .product-card:hover .product-image {
         transform: scale(1.05);
     }
-    
     .product-image-placeholder {
         width: 100%;
         height: 100%;
@@ -394,177 +320,43 @@
         font-size: 4rem;
         color: #4caf50;
     }
-    
-    .product-link {
+    .product-link-wrapper {
         text-decoration: none;
         color: inherit;
+        display: block;
+        flex: 1;
     }
-    
+    .product-info {
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
     .product-info h3 {
         font-size: 1rem;
         margin-bottom: 0.5rem;
         color: #333;
     }
-    
     .product-category {
         color: #888;
         font-size: 0.8rem;
         margin-bottom: 0.5rem;
     }
-    
     .product-price {
         font-size: 1.2rem;
         font-weight: bold;
         color: #2e7d32;
         margin: 0.5rem 0;
     }
-    
     .product-stock {
         font-size: 0.8rem;
         margin-bottom: 1rem;
     }
-    
     .in-stock {
         color: #4caf50;
     }
-    
     .out-of-stock {
         color: #f44336;
     }
-    
-    .btn-add-to-cart {
-        width: 100%;
-        padding: 0.6rem;
-        background: #4caf50;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.3s;
-    }
-    
-    .btn-add-to-cart:hover:not(:disabled) {
-        background: #2e7d32;
-    }
-    
-    .btn-add-to-cart:disabled {
-        background: #ccc;
-        cursor: not-allowed;
-    }
-    
-    .no-products {
-        text-align: center;
-        padding: 4rem;
-        background: white;
-        border-radius: 12px;
-        grid-column: 1 / -1;
-    }
-    
-    .no-products i {
-        font-size: 4rem;
-        color: #ccc;
-        margin-bottom: 1rem;
-    }
-    
-    .btn-reset-filters {
-        display: inline-block;
-        margin-top: 1rem;
-        padding: 0.6rem 1.2rem;
-        background: #4caf50;
-        color: white;
-        text-decoration: none;
-        border-radius: 8px;
-    }
-    
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 1rem;
-        margin-top: 2rem;
-        padding: 1rem;
-    }
-    
-    .page-link {
-        padding: 0.5rem 1rem;
-        background: white;
-        color: #4caf50;
-        text-decoration: none;
-        border-radius: 8px;
-        transition: all 0.3s;
-    }
-    
-    .page-link:hover {
-        background: #4caf50;
-        color: white;
-    }
-    
-    .current-page {
-        padding: 0.5rem 1rem;
-        background: #4caf50;
-        color: white;
-        border-radius: 8px;
-    }
-    
-    @media (max-width: 768px) {
-        .shop-layout {
-            grid-template-columns: 1fr;
-        }
-        
-        .shop-sidebar {
-            position: static;
-        }
-        
-        .sort-bar {
-            justify-content: center;
-        }
-        
-        .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        }
-    }
-
-
-    .product-link-wrapper {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-    }
-
-    .product-link-wrapper:hover .product-image {
-        transform: scale(1.05);
-    }
-
-    .product-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-    }
-
-    .product-image-container {
-        width: 100%;
-        height: 250px;
-        overflow: hidden;
-    }
-
-    .product-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s;
-    }
-
     .btn-add-to-cart {
         margin: 0 1rem 1rem 1rem;
         padding: 0.6rem;
@@ -574,195 +366,171 @@
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.3s;
+        font-size: 0.9rem;
+        width: calc(100% - 2rem);
+        box-sizing: border-box;
     }
-
     .btn-add-to-cart:hover:not(:disabled) {
         background: #2e7d32;
     }
-
     .btn-add-to-cart:disabled {
         background: #ccc;
         cursor: not-allowed;
     }
-
-    /* Mobile adjustments for product grid */
-@media (max-width: 768px) {
-    .products-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .no-products {
+        text-align: center;
+        padding: 4rem;
+        background: white;
+        border-radius: 12px;
+        grid-column: 1 / -1;
     }
-    
-    .product-info h3 {
-        font-size: 0.9rem;
-    }
-    
-    .product-price {
-        font-size: 1rem;
-    }
-    
-    .btn-add-to-cart {
-        padding: 0.5rem;
-        font-size: 0.8rem;
-    }
-    
-    .shop-layout {
-        grid-template-columns: 1fr;
-    }
-    
-    .shop-sidebar {
-        position: static;
+    .no-products i {
+        font-size: 4rem;
+        color: #ccc;
         margin-bottom: 1rem;
     }
-    
-    .filter-section {
+    .btn-reset-filters {
+        display: inline-block;
+        margin-top: 1rem;
+        padding: 0.6rem 1.2rem;
+        background: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2rem;
         padding: 1rem;
     }
-    
-    .sort-bar {
-        flex-direction: column;
-        align-items: stretch;
+    .page-link {
+        padding: 0.5rem 1rem;
+        background: white;
+        color: #4caf50;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s;
     }
-    
-    .sort-select {
-        width: 100%;
+    .page-link:hover {
+        background: #4caf50;
+        color: white;
     }
-}
-
-.btn-add-to-cart {
-    width: 100%;
-    padding: 0.6rem;
-    background: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* On mobile, allow wrap and adjust padding */
-@media (max-width: 768px) {
-    .btn-add-to-cart {
-        white-space: normal;
-        font-size: 0.8rem;
-        padding: 0.5rem;
+    .current-page {
+        padding: 0.5rem 1rem;
+        background: #4caf50;
+        color: white;
+        border-radius: 8px;
     }
-}
 
-.product-info {
-    padding: 1rem;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .shop-layout {
+            grid-template-columns: 1fr;
+        }
+        .shop-sidebar {
+            position: static;
+            margin-bottom: 1rem;
+        }
+        .sort-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .sort-select {
+            width: 100%;
+        }
+        .products-grid {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        .product-info h3 {
+            font-size: 0.9rem;
+        }
+        .product-price {
+            font-size: 1rem;
+        }
+        .btn-add-to-cart {
+            width: calc(100% - 2rem);
+            white-space: normal;
+            font-size: 0.8rem;
+            padding: 0.5rem;
+        }
+    }
 </style>
 
 <script>
     function updateCartCount(count) {
-        // Update regular cart count (in navbar)
-        const regularCounts = document.querySelectorAll('.cart-count');
-        regularCounts.forEach(el => el.textContent = count);
-        // Update floating cart count (mobile)
-        const floatingCounts = document.querySelectorAll('.floating-cart-count');
-        floatingCounts.forEach(el => el.textContent = count);
+        document.querySelectorAll('.cart-count, .floating-cart-count').forEach(el => el.textContent = count);
     }
 
     function getCookie(name) {
-        let cookieValue = null;
+        let value = null;
         if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            const parts = document.cookie.split(';');
+            for (let part of parts) {
+                const [key, val] = part.trim().split('=');
+                if (key === name) {
+                    value = decodeURIComponent(val);
                     break;
                 }
             }
         }
-        return cookieValue;
+        return value;
     }
-    
+
     function addToCartFromList(productId) {
         event.stopPropagation();
-        
         fetch(`/cart/add/${productId}/`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') },
             body: JSON.stringify({ quantity: 1 })
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             if (data.success) {
                 updateCartCount(data.cart_count);
                 alert('Product added to cart!');
-            } else if (data.error) {
-                alert(data.error);
             } else {
-                alert('Please login to add items to cart');
+                alert(data.error || 'Please login to add items to cart');
             }
         })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error adding product to cart');
-        });
-        
+        .catch(() => alert('Error adding product to cart'));
         return false;
     }
-    
-    // Filter and sort functionality
-    document.getElementById('sortSelect')?.addEventListener('change', function() {
-        updateUrl();
-    });
-    
-    document.getElementById('productTypeFilter')?.addEventListener('change', function() {
-        updateUrl();
-    });
-    
-    document.getElementById('applyPrice')?.addEventListener('click', function() {
-        updateUrl();
-    });
-    
+
+    // Filters & sorting
+    const sortSelect = document.getElementById('sortSelect');
+    const typeFilter = document.getElementById('productTypeFilter');
+    const applyPrice = document.getElementById('applyPrice');
+
+    if (sortSelect) sortSelect.addEventListener('change', updateUrl);
+    if (typeFilter) typeFilter.addEventListener('change', updateUrl);
+    if (applyPrice) applyPrice.addEventListener('click', updateUrl);
+
     function updateUrl() {
-        const sort = document.getElementById('sortSelect').value;
-        const type = document.getElementById('productTypeFilter').value;
-        const minPrice = document.getElementById('minPrice').value;
-        const maxPrice = document.getElementById('maxPrice').value;
+        const sort = sortSelect?.value || 'newest';
+        const type = typeFilter?.value || 'all';
+        const minPrice = document.getElementById('minPrice')?.value;
+        const maxPrice = document.getElementById('maxPrice')?.value;
         const searchQuery = "{{ search_query|default:'' }}";
         const categorySlug = "{{ category.slug|default:'' }}";
-        
-        let url = '';
-        if (categorySlug) {
-            url = `/shop/category/${categorySlug}/`;
-        } else {
-            url = '/shop/';
-        }
-        
+
+        let url = categorySlug ? `/shop/category/${categorySlug}/` : '/shop/';
         const params = new URLSearchParams();
-        if (sort && sort !== 'newest') params.append('sort', sort);
-        if (type && type !== 'all') params.append('type', type);
+        if (sort !== 'newest') params.append('sort', sort);
+        if (type !== 'all') params.append('type', type);
         if (minPrice) params.append('min_price', minPrice);
         if (maxPrice) params.append('max_price', maxPrice);
         if (searchQuery) params.append('search', searchQuery);
-        
-        if (params.toString()) {
-            url += '?' + params.toString();
-        }
-        
+        if (params.toString()) url += '?' + params.toString();
         window.location.href = url;
     }
-    
-    // Search functionality
+
+    // Global search (handled in base.html already, but keep for safety)
     document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            window.location.href = `/shop/?search=${encodeURIComponent(this.value)}`;
-        }
+        if (e.key === 'Enter') window.location.href = `/shop/?search=${encodeURIComponent(this.value)}`;
     });
 </script>
 {% endblock %}

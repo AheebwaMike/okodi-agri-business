@@ -432,6 +432,13 @@
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
+
+    /* Force floating cart visibility on mobile */
+    @media (max-width: 768px) {
+        .floating-cart {
+            display: block !important;
+        }
+    }
     </style>
     
     {% block extra_css %}{% endblock %}
