@@ -3,13 +3,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{% block title %}Okodi Agri-Business - Quality Agro Products{% endblock %}</title>
     
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -23,6 +20,7 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
         /* Navigation Bar */
@@ -92,7 +90,6 @@
             align-items: center;
         }
         
-        /* Navigation link styles */
         .nav-links a {
             text-decoration: none;
             color: #333;
@@ -134,7 +131,6 @@
             background: #2e7d32;
         }
         
-        /* Logout button styling */
         .nav-links form button {
             background: transparent;
             border: 2px solid #4caf50;
@@ -169,22 +165,19 @@
             font-weight: bold;
         }
         
-        /* Mobile styles */
+        /* Mobile nav */
         @media (max-width: 768px) {
             .nav-container {
                 padding: 0.8rem 1rem;
             }
-            
             .menu-toggle {
                 display: block;
             }
-            
             .search-bar {
                 width: 100%;
                 max-width: none;
                 margin: 0.8rem 0 0;
             }
-            
             .nav-links {
                 display: none;
                 width: 100%;
@@ -194,37 +187,25 @@
                 border-top: 1px solid #eee;
                 margin-top: 0.8rem;
             }
-            
             .nav-links.active {
                 display: flex;
             }
-            
-            .nav-links a, 
-            .nav-links form {
+            .nav-links a, .nav-links form {
                 text-align: center;
                 width: 100%;
             }
-            
-            .btn-login, 
-            .btn-register,
-            .nav-links form button {
-                width: 100%;
-                text-align: center;
-            }
-            
-            /* Hide the cart icon in nav on mobile (use floating cart instead) */
             .nav-links .cart-icon {
                 display: none;
             }
         }
         
-        /* Floating cart - visible only on mobile */
+        /* Floating cart */
         .floating-cart {
             display: none;
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 1000;
+            z-index: 9999;
         }
         
         .floating-cart a {
@@ -264,17 +245,17 @@
         
         @media (max-width: 768px) {
             .floating-cart {
-                display: block;
+                display: block !important;
             }
         }
         
-        /* Scroll to top button */
+        /* Scroll to top */
         .scroll-to-top {
             display: none;
             position: fixed;
             bottom: 20px;
             left: 20px;
-            z-index: 1000;
+            z-index: 9999;
             width: 50px;
             height: 50px;
             background: #2e7d32;
@@ -340,8 +321,7 @@
             font-size: 1.2rem;
         }
         
-        .footer-section p, 
-        .footer-section a {
+        .footer-section p, .footer-section a {
             color: #ccc;
             text-decoration: none;
             line-height: 1.8;
@@ -379,29 +359,6 @@
             }
         }
         
-        /* Fix for Add to Cart buttons (prevents overflow) */
-        .btn-add-to-cart,
-        .related-add-to-cart,
-        .btn-add-to-cart-detail {
-            white-space: normal;
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-        
-        /* Ensure product cards don't overflow */
-        .product-card,
-        .related-product-card {
-            width: 100%;
-            max-width: 100%;
-            overflow: hidden;
-        }
-        
-        .product-info {
-            padding: 1rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
         /* Messages */
         .messages {
             max-width: 1400px;
@@ -432,13 +389,6 @@
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
-
-    /* Force floating cart visibility on mobile */
-    @media (max-width: 768px) {
-        .floating-cart {
-            display: block !important;
-        }
-    }
     </style>
     
     {% block extra_css %}{% endblock %}
@@ -452,11 +402,9 @@
                 </a>
                 <button class="menu-toggle" aria-label="Menu">☰</button>
             </div>
-            
             <div class="search-bar">
                 <input type="text" placeholder="Search agro products..." id="searchInput">
             </div>
-            
             <div class="nav-links">
                 <a href="/"><i class="fas fa-home"></i> Home</a>
                 <a href="/shop/"><i class="fas fa-store"></i> Shop</a>
@@ -478,7 +426,7 @@
         </div>
     </nav>
     
-    <!-- Floating Cart Button (mobile only) -->
+    <!-- Floating Cart -->
     <div class="floating-cart" id="floatingCart">
         <a href="/cart/">
             <i class="fas fa-shopping-cart"></i>
@@ -531,7 +479,7 @@
     </footer>
     
     <script>
-        // Hamburger menu toggle
+        // Hamburger menu
         const menuToggle = document.querySelector('.menu-toggle');
         const navLinks = document.querySelector('.nav-links');
         if (menuToggle) {
@@ -540,14 +488,14 @@
             });
         }
         
-        // Search functionality
+        // Search
         document.getElementById('searchInput')?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 window.location.href = `/shop/?search=${encodeURIComponent(this.value)}`;
             }
         });
         
-        // Scroll to top button
+        // Scroll to top
         const scrollBtn = document.getElementById('scrollToTopBtn');
         window.addEventListener('scroll', () => {
             if (window.pageYOffset > 300) {
