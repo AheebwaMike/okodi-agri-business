@@ -266,6 +266,7 @@
         border: 1px solid #ddd;
         border-radius: 8px;
         font-size: 0.9rem;
+        box-sizing: border-box;
     }
     
     .price-inputs {
@@ -291,6 +292,8 @@
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.3s;
+        font-size: 0.9rem;
+        box-sizing: border-box;
     }
     
     .filter-btn:hover {
@@ -390,10 +393,6 @@
         justify-content: center;
         font-size: 4rem;
         color: #4caf50;
-    }
-    
-    .product-info {
-        padding: 1rem;
     }
     
     .product-link {
@@ -629,10 +628,49 @@
     }
 }
 
+.btn-add-to-cart {
+    width: 100%;
+    padding: 0.6rem;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* On mobile, allow wrap and adjust padding */
+@media (max-width: 768px) {
+    .btn-add-to-cart {
+        white-space: normal;
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+}
+
+.product-info {
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 
 </style>
 
 <script>
+    function updateCartCount(count) {
+        // Update regular cart count (in navbar)
+        const regularCounts = document.querySelectorAll('.cart-count');
+        regularCounts.forEach(el => el.textContent = count);
+        // Update floating cart count (mobile)
+        const floatingCounts = document.querySelectorAll('.floating-cart-count');
+        floatingCounts.forEach(el => el.textContent = count);
+    }
+
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -649,7 +687,6 @@
     }
     
     function addToCartFromList(productId) {
-        // Prevent event from bubbling up to the link
         event.stopPropagation();
         
         fetch(`/cart/add/${productId}/`, {
@@ -663,10 +700,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const cartCountElements = document.querySelectorAll('.cart-count');
-                cartCountElements.forEach(el => {
-                    el.textContent = data.cart_count;
-                });
+                updateCartCount(data.cart_count);
                 alert('Product added to cart!');
             } else if (data.error) {
                 alert(data.error);

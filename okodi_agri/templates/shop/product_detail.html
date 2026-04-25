@@ -470,6 +470,13 @@
 </style>
 
 <script>
+    function updateCartCount(count) {
+        const regularCounts = document.querySelectorAll('.cart-count');
+        regularCounts.forEach(el => el.textContent = count);
+        const floatingCounts = document.querySelectorAll('.floating-cart-count');
+        floatingCounts.forEach(el => el.textContent = count);
+    }
+
     function changeImage(src) {
         const mainImage = document.getElementById('mainImage');
         if (mainImage) {
@@ -517,10 +524,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const cartCountElements = document.querySelectorAll('.cart-count');
-                cartCountElements.forEach(el => {
-                    el.textContent = data.cart_count;
-                });
+                updateCartCount(data.cart_count);
                 alert(`${data.item_quantity} x product(s) added to cart!`);
             } else if (data.error) {
                 alert(data.error);
@@ -548,10 +552,7 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const cartCountElements = document.querySelectorAll('.cart-count');
-                cartCountElements.forEach(el => {
-                    el.textContent = data.cart_count;
-                });
+                updateCartCount(data.cart_count);
                 alert('Product added to cart!');
             } else if (data.error) {
                 alert(data.error);

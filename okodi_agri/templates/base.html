@@ -472,10 +472,111 @@
         padding: 0 0.5rem;  /* even smaller on very narrow screens */
     }
 }
+
+
+
+/* Floating cart - hidden on desktop, visible on mobile */
+.floating-cart {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.floating-cart a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background: #4caf50;
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    text-decoration: none;
+    font-size: 1.5rem;
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.floating-cart a:hover {
+    transform: scale(1.05);
+    background: #2e7d32;
+}
+
+.floating-cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff5722;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+}
+
+/* Show on mobile only */
+@media (max-width: 768px) {
+    .floating-cart {
+        display: block;
+    }
+    
+    /* Optionally hide the cart link in nav-links on mobile to avoid duplication */
+    .nav-links .cart-icon {
+        display: none;
+    }
+}
+
+
+
+.scroll-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    transition: background 0.3s;
+}
+
+.scroll-to-top:hover {
+    background: #1b5e20;
+}
+
+@media (max-width: 768px) {
+    .scroll-to-top {
+        bottom: 80px; /* Above floating cart if needed */
+    }
+}
 </style>
     
     {% block extra_css %}{% endblock %}
 </head>
+
+<!-- Floating Cart Button for Mobile -->
+<div class="floating-cart" id="floatingCart">
+    <a href="/cart/">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="floating-cart-count">{{ cart_count|default:0 }}</span>
+    </a>
+</div>
+
+<button id="scrollToTopBtn" class="scroll-to-top" title="Go to top">
+    <i class="fas fa-arrow-up"></i>
+</button>
+
 <body>
     <nav class="navbar">
         <div class="nav-container">
@@ -577,6 +678,19 @@
                 window.location.href = `/shop/?search=${encodeURIComponent(this.value)}`;
             }
         });
+
+        // Scroll to top button
+const scrollBtn = document.getElementById('scrollToTopBtn');
+window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+        scrollBtn.style.display = 'block';
+    } else {
+        scrollBtn.style.display = 'none';
+    }
+});
+scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
     </script>
     
     {% block extra_js %}{% endblock %}
